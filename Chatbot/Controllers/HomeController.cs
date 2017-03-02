@@ -9,6 +9,9 @@ namespace Chatbot.Controllers
 {
     public class HomeController : Controller
     {
+
+        ChatbotContainer db = new ChatbotContainer();
+
         public ActionResult Index()
         {
             return View();
@@ -43,9 +46,7 @@ namespace Chatbot.Controllers
             {
                 // LoyaltyContainer dataContext = new LoyaltyContainer();
                 // Check credentials
-                //User user = dataContext.Users.FirstOrDefault(u => u.Username == loginModel.Username && u.Password == loginModel.Password && u.Status == true);
-
-                User user = new User();
+                User user = db.Users.FirstOrDefault(u => u.Username == loginModel.Username && u.Password == loginModel.Password);
 
                 if (user != null)
                 {
@@ -57,6 +58,43 @@ namespace Chatbot.Controllers
                 else
                 {
                     ModelState.AddModelError("", "Invalid username or password");
+                }
+            }
+
+            return View();
+        }
+
+        // Show signup page if user is not loggedin
+        [HttpGet]
+        public ActionResult Signup()
+        {
+            return View();
+        }
+
+        // Do signup for a user and redirect to specific page w.r.t. user role
+        [HttpPost]
+        public ActionResult Signup(User user)
+        {
+            if (ModelState.IsValid)
+            {
+                // LoyaltyContainer dataContext = new LoyaltyContainer();
+                // Check credentials
+                User existingUser = db.Users.FirstOrDefault(u => u.Username == user.Username);
+
+                if (existingUser == null)
+                {
+                    db.Users.Add(user);
+
+                    db.SaveChanges();
+
+                    HttpContext.Session["LoggedInUser"] = db.Users.FirstOrDefault(u => u.Username == user.Username);
+
+                    return RedirectToAction("Index", "Home");
+                }
+                // Invalid credentials
+                else
+                {
+                    ModelState.AddModelError("", "Username already exists");
                 }
             }
 
