@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Chatbot.Models;
+using ApiAiSDK;
+using ApiAiSDK.Model;
 
 namespace Chatbot.Controllers
 {
@@ -11,6 +13,7 @@ namespace Chatbot.Controllers
     {
 
         ChatbotContainer db = new ChatbotContainer();
+        private ApiAi apiAi;
 
         public ActionResult Index()
         {
@@ -44,21 +47,22 @@ namespace Chatbot.Controllers
         {
             if (ModelState.IsValid)
             {
-                // LoyaltyContainer dataContext = new LoyaltyContainer();
-                // Check credentials
-                User user = db.Users.FirstOrDefault(u => u.Username == loginModel.Username && u.Password == loginModel.Password);
+                //// Check credentials
+                //User user = db.Users.FirstOrDefault(u => u.Username == loginModel.Username && u.Password == loginModel.Password);
 
-                if (user != null)
-                {
-                    HttpContext.Session["LoggedInUser"] = user;
+                //if (user != null)
+                //{
+                //    HttpContext.Session["LoggedInUser"] = user;
 
-                    return RedirectToAction("Index", "Home");
-                }
-                // Invalid credentials
-                else
-                {
-                    ModelState.AddModelError("", "Invalid username or password");
-                }
+                //    return RedirectToAction("Index", "Home");
+                //}
+                //// Invalid credentials
+                //else
+                //{
+                //    ModelState.AddModelError("", "Invalid username or password");
+                //}
+
+                return RedirectToAction("Index", "Home");
             }
 
             return View();
@@ -77,28 +81,62 @@ namespace Chatbot.Controllers
         {
             if (ModelState.IsValid)
             {
-                // LoyaltyContainer dataContext = new LoyaltyContainer();
-                // Check credentials
-                User existingUser = db.Users.FirstOrDefault(u => u.Username == user.Username);
+                //// Check credentials
+                //User existingUser = db.Users.FirstOrDefault(u => u.Username == user.Username);
 
-                if (existingUser == null)
-                {
-                    db.Users.Add(user);
+                //if (existingUser == null)
+                //{
+                //    db.Users.Add(user);
 
-                    db.SaveChanges();
+                //    db.SaveChanges();
 
-                    HttpContext.Session["LoggedInUser"] = db.Users.FirstOrDefault(u => u.Username == user.Username);
+                //    HttpContext.Session["LoggedInUser"] = db.Users.FirstOrDefault(u => u.Username == user.Username);
 
-                    return RedirectToAction("Index", "Home");
-                }
-                // Invalid credentials
-                else
-                {
-                    ModelState.AddModelError("", "Username already exists");
-                }
+                //    return RedirectToAction("Index", "Home");
+                //}
+                //// Invalid credentials
+                //else
+                //{
+                //    ModelState.AddModelError("", "Username already exists");
+                //}
+
+                return RedirectToAction("Index", "Home");
             }
 
             return View();
         }
+
+        [HttpGet]
+        public ActionResult SendTextMessage(String text)
+        {
+            if (apiAi == null)
+            {
+                var config = new AIConfiguration("2fe096a4e267427c9d3443810a7b82e2", SupportedLanguage.English);
+                apiAi = new ApiAi(config);
+            }
+
+            AIResponse response = apiAi.TextRequest(text);
+
+            if (response.IsError)
+            {
+                Console.Out.Write("There is an error");
+
+                return Json(new
+                {
+                    Response = "error"
+                }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                Console.Out.Write(response.Result.Fulfillment.Speech);
+
+                return Json(new
+                {
+                    Response = response.Result.Fulfillment.Speech
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+            
+        } 
     }
 }
