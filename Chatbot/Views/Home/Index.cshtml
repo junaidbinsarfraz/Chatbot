@@ -2,16 +2,24 @@
     ViewBag.Title = "Home Page";
 }
 
-<div>
-    Enter your query here
+<div class="row">
+    <div class="col-md-6 col-md-push-3">
+        <div class="form-horizontal form-material">
 
-    <input type="text" name="input" id="input" />
-    <button type="button" onclick="sendMessage();">Send</button>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Enter your query here" name="input" id="input" />
+            </div>
 
-    <div>
-        <label id="output">
+            <div class="form-group">
+                <button type="button" class="btn btn-info btn-sm btn-block text-uppercase waves-effect waves-light" onclick="sendMessage();">Send</button>
+            </div>
 
-        </label>
+        </div>
+        <div>
+            <label id="output">
+
+            </label>
+        </div>
     </div>
 
 </div>
@@ -33,9 +41,9 @@
                     if (data.Response == "error") {
                         // Show Error
 
-                        $('#output').html($('#output').html() + "<br/>Error Occurred");
+                        $('#output').html("Error Occurred<br/>" + $('#output').html());
                     } else {
-                        $('#output').html($('#output').html() + "<br/>" + data.Response);
+                        $('#output').html(data.Response + "<br/>" + $('#output').html());
                     }
 
                     $('#input').val('');

@@ -47,20 +47,20 @@ namespace Chatbot.Controllers
         {
             if (ModelState.IsValid)
             {
-                //// Check credentials
-                //User user = db.Users.FirstOrDefault(u => u.Username == loginModel.Username && u.Password == loginModel.Password);
+                // Check credentials
+                User user = db.Users.FirstOrDefault(u => u.Username == loginModel.Username && u.Password == loginModel.Password);
 
-                //if (user != null)
-                //{
-                //    HttpContext.Session["LoggedInUser"] = user;
+                if (user != null)
+                {
+                    HttpContext.Session["LoggedInUser"] = user;
 
-                //    return RedirectToAction("Index", "Home");
-                //}
-                //// Invalid credentials
-                //else
-                //{
-                //    ModelState.AddModelError("", "Invalid username or password");
-                //}
+                    return RedirectToAction("Index", "Home");
+                }
+                // Invalid credentials
+                else
+                {
+                    ModelState.AddModelError("", "Invalid username or password");
+                }
 
                 return RedirectToAction("Index", "Home");
             }
@@ -81,24 +81,24 @@ namespace Chatbot.Controllers
         {
             if (ModelState.IsValid)
             {
-                //// Check credentials
-                //User existingUser = db.Users.FirstOrDefault(u => u.Username == user.Username);
+                // Check credentials
+                User existingUser = db.Users.FirstOrDefault(u => u.Username == user.Username);
 
-                //if (existingUser == null)
-                //{
-                //    db.Users.Add(user);
+                if (existingUser == null)
+                {
+                    db.Users.Add(user);
 
-                //    db.SaveChanges();
+                    db.SaveChanges();
 
-                //    HttpContext.Session["LoggedInUser"] = db.Users.FirstOrDefault(u => u.Username == user.Username);
+                    HttpContext.Session["LoggedInUser"] = db.Users.FirstOrDefault(u => u.Username == user.Username);
 
-                //    return RedirectToAction("Index", "Home");
-                //}
-                //// Invalid credentials
-                //else
-                //{
-                //    ModelState.AddModelError("", "Username already exists");
-                //}
+                    return RedirectToAction("Index", "Home");
+                }
+                // Invalid credentials
+                else
+                {
+                    ModelState.AddModelError("", "Username already exists");
+                }
 
                 return RedirectToAction("Index", "Home");
             }
