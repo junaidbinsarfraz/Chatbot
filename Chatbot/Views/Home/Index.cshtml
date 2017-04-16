@@ -41,9 +41,9 @@
                     if (data.Response == "error") {
                         // Show Error
 
-                        $('#output').html("Error Occurred<br/>" + $('#output').html());
+                        $('#output').html("Error Occurred<br/><hr/>" + $('#output').html());
                     } else {
-                        $('#output').html(data.Response + "<br/>" + $('#output').html());
+                        $('#output').html(data.Response + "<br/><hr/>" + $('#output').html());
                     }
 
                     $('#input').val('');

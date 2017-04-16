@@ -14,6 +14,7 @@ namespace Chatbot.Controllers
 
         ChatbotContainer db = new ChatbotContainer();
         private ApiAi apiAi;
+        private List<AIContext> contexts;
 
         public ActionResult Index()
         {
@@ -115,7 +116,11 @@ namespace Chatbot.Controllers
                 apiAi = new ApiAi(config);
             }
 
-            AIResponse response = apiAi.TextRequest(text);
+            RequestExtras re = new RequestExtras();
+
+            re.Contexts = (List<AIContext>) HttpContext.Session["Contexts"];
+            
+            AIResponse response = apiAi.TextRequest(text, re);
 
             if (response.IsError)
             {
@@ -129,6 +134,30 @@ namespace Chatbot.Controllers
             else
             {
                 Console.Out.Write(response.Result.Fulfillment.Speech);
+
+                if (response.Result.Contexts != null)
+                {
+
+                    contexts = new List<AIContext>();
+
+                    foreach (var aoc in response.Result.Contexts.ToList())
+                    {
+                        AIContext ac = new AIContext();
+
+                        ac.Lifespan = aoc.Lifespan;
+                        ac.Name = aoc.Name;
+                        ac.Parameters = aoc.Parameters.ToDictionary(k => k.Key, k => k.Value.ToString()); ;
+
+                        contexts.Add(ac);
+                    }
+
+                }
+                else
+                {
+                    contexts = null;
+                }
+
+                HttpContext.Session["Contexts"] = contexts;
 
                 return Json(new
                 {
