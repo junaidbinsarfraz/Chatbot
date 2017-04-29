@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    @*<link rel="icon" type="image/png" sizes="16x16" href="~/images/favicon.png">*@
+    <title>Chatbot</title>
+    <!-- Bootstrap Core CSS -->
+    <script src="~/plugins/bower_components/jquery/dist/jquery.min.js"></script>
+    <link href="~/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Menu CSS -->
+    <link href="~/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css" rel="stylesheet">
+    <!-- morris CSS -->
+    @*<link href="~/plugins/bower_components/morrisjs/morris.css" rel="stylesheet">*@
+    <!-- animation CSS -->
+    <link href="~/css/animate.css" rel="stylesheet">
+    <!-- color CSS -->
+    <link href="~/css/colors/megna.css" id="theme" rel="stylesheet">
+    @*<link href="~/plugins/bower_components/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />*@
+    <!-- Page plugins css -->
+    @*<link href="~/plugins/bower_components/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">*@
+    <!-- Color picker plugins css -->
+    @*<link href="~/plugins/bower_components/jquery-asColorPicker-master/css/asColorPicker.css" rel="stylesheet">*@
+    <!-- Date picker plugins css -->
+    @*<link href="~/plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css">*@
+    <!-- Daterange picker plugins css -->
+    @*<link href="~/plugins/bower_components/timepicker/bootstrap-timepicker.min.css" rel="stylesheet">
+    <link href="~/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">*@
+    <!-- Calendar CSS -->
+    @*<link href="~/plugins/bower_components/calendar/dist/fullcalendar.css" rel="stylesheet" />
+    <link href="~/plugins/bower_components/calendar/dist/fullcalendar.print.css" media="print" rel="stylesheet" />*@
+    <!-- Custom CSS -->
+    <link href="~/css/style.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="~/css/colors/gray-dark.css" id="theme" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="cssload-speeding-wheel"></div>
+    </div>
+    <div id="wrapper">
+        <!-- Top Navigation -->
+        <nav class="navbar navbar-default navbar-static-top m-b-0">
+            <div class="navbar-header">
+                <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="ti-menu"></i></a>
+                <div class="top-left-part"><a class="logo" href="javascript:void(0)"><b><!--This is dark logo icon--></b><span class=""><!--This is dark logo text--></span></a></div>
+                <ul class="nav navbar-top-links navbar-left hidden-xs">
+                    <li><a href="javascript:void(0)" class="open-close hidden-xs waves-effect waves-light"><i class="icon-arrow-left-circle ti-menu"></i></a></li>
+                </ul>
+                <ul class="nav navbar-top-links navbar-right pull-right">
+                    <!-- .Megamenu -->
+                    <li class="mega-dropdown">
+                        <a href="#" class="dropdown-toggle u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Html.Raw(((Chatbot.User)HttpContext.Current.Session["LoggedInUser"]).Name) <span class="caret"></span></a>
+                        <ul class="dropdown-menu animated flipInY">
+                            <li><a href="../Home/Login"><i class="fa fa-power-off"></i>  Logout</a></li>
+                        </ul>
+                    </li>
+                    <!-- /.Megamenu -->
+
+                    <li class="right-side-toggle"> <a class="waves-effect waves-light" href="javascript:void(0)"><i class="ti-settings"></i></a></li>
+                    <!-- /.dropdown -->
+                </ul>
+            </div>
+            <!-- /.navbar-header -->
+            <!-- /.navbar-top-links -->
+            <!-- /.navbar-static-side -->
+        </nav>
+        <!-- End Top Navigation -->
+        <!-- Left navbar-header -->
+        <div class="navbar-default sidebar" role="navigation">
+
+            <div class="sidebar-nav navbar-collapse slimscrollsidebar">
+                <div class="user-profile">
+                    <div class="dropdown user-pro-body">
+                        <a href="#" class="dropdown-toggle u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Html.Raw(((Chatbot.User)HttpContext.Current.Session["LoggedInUser"]).Name) <span class="caret"></span></a>
+                        <ul class="dropdown-menu animated flipInY">
+                            <li><a href="../Home/Login"><i class="fa fa-power-off"></i>  Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Left navbar-header end -->
+        <!-- Page Content -->
+        <div id="page-wrapper">
+            <div class="container-fluid">
+                <div class="row bg-title">
+                </div>
+                <!--row -->
+                <div class="row">
+                    <div class="col-xs-12">
+                        @RenderBody()
+                    </div>
+                </div>
+                <!--/row -->
+            </div>
+            <!-- /.container-fluid -->
+            <footer class="footer text-center"> &copy; 2017 Chatbot </footer>
+        </div>
+        <!-- /#page-wrapper -->
+    </div>
+    <!-- jQuery -->
+    <!-- Bootstrap Core JavaScript -->
+    <script src="~/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- Menu Plugin JavaScript -->
+    <script src="~/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
+    <!--slimscroll JavaScript -->
+    <script src="~/js/jquery.slimscroll.js"></script>
+    <!--Wave Effects -->
+    <script src="~/js/waves.js"></script>
+    <!-- Sparkline chart JavaScript -->
+    @*<script src="~/plugins/bower_components/jquery-sparkline/jquery.sparkline.min.js"></script>*@
+    <!-- jQuery peity -->
+    @*<script src="~/plugins/bower_components/peity/jquery.peity.min.js"></script>
+    <script src="~/plugins/bower_components/peity/jquery.peity.init.js"></script>*@
+    <!-- Custom Theme JavaScript -->
+    <script src="~/js/custom.min.js"></script>
+    <!-- Validator JavaScript -->
+    <script src="~/js/validator.js"></script>
+    @*<script src="~/js/dashboard1.js"></script>*@
+    <!--Morris JavaScript -->
+    @*<script src="~/plugins/bower_components/raphael/raphael-min.js"></script>
+    <script src="~/plugins/bower_components/morrisjs/morris.js"></script>*@
+    <!--Style Switcher -->
+    @*<script src="~/plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
+    <script src="~/plugins/bower_components/datatables/jquery.dataTables.min.js"></script>*@
+    <!-- Calendar JavaScript -->
+    @*<script src="~/plugins/bower_components/calendar/jquery-ui.min.js"></script>*@
+    <!-- Plugin JavaScript -->
+    @*<script src="~/plugins/bower_components/moment/moment.js"></script>
+    <script src='~/plugins/bower_components/calendar/dist/fullcalendar.min.js'></script>*@
+
+    <!-- Clock Plugin JavaScript -->
+    @*<script src="~/plugins/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>*@
+    <!-- Color Picker Plugin JavaScript -->
+    @*<script src="~/plugins/bower_components/jquery-asColorPicker-master/libs/jquery-asColor.js"></script>
+    <script src="~/plugins/bower_components/jquery-asColorPicker-master/libs/jquery-asGradient.js"></script>
+    <script src="~/plugins/bower_components/jquery-asColorPicker-master/dist/jquery-asColorPicker.min.js"></script>*@
+    <!-- Date Picker Plugin JavaScript -->
+    @*<script src="~/plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>*@
+    <!-- Date range Plugin JavaScript -->
+    @*<script src="~/plugins/bower_components/timepicker/bootstrap-timepicker.min.js"></script>
+    <script src="~/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>*@
+    <!-- Sweet-Alert  -->
+    @*<script src="~/plugins/bower_components/sweetalert/sweetalert.min.js"></script>*@
+    <!--Style Switcher -->
+    @*<script src="../plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>*@
+    <!-- start - This is for export functionality only -->
+    @*<script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>*@
+    <!-- end - This is for export functionality only -->
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.js"></script>*@
+    @RenderSection("Scripts", false)
+</body>
+</html>

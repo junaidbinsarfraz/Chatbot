@@ -3,6 +3,8 @@
   <PropertyGroup>
     <WebStackScaffolding_AreaDialogWidth>600</WebStackScaffolding_AreaDialogWidth>
     <UseIISExpress>true</UseIISExpress>
+    <NameOfLastUsedPublishProfile>ChatBot</NameOfLastUsedPublishProfile>
+    <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>

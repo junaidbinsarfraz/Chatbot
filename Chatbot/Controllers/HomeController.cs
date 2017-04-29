@@ -63,7 +63,7 @@ namespace Chatbot.Controllers
                     ModelState.AddModelError("", "Invalid username or password");
                 }
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Login", "Home");
             }
 
             return View();

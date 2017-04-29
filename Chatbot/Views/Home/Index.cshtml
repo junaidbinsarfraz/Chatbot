@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Medical Chatbot | Home Page";
 }
 
 <div class="row">
@@ -7,11 +7,11 @@
         <div class="form-horizontal form-material">
 
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="Enter your query here" name="input" id="input" />
+                <input type="text" class="form-control" placeholder="Hi, how can I help?" name="input" id="input" />
             </div>
 
             <div class="form-group">
-                <button type="button" class="btn btn-info btn-sm btn-block text-uppercase waves-effect waves-light" onclick="sendMessage();">Send</button>
+                <button type="button" id="btn-send" class="btn btn-info btn-sm btn-block text-uppercase waves-effect waves-light" onclick="sendMessage();">Send</button>
             </div>
 
         </div>
@@ -30,6 +30,11 @@
         // Send ajax call
         function sendMessage() {
             value = $('#input').val();
+
+            if (!value.trim()) {
+                return;
+            }
+
             $.ajax({
                 url: '@Url.Action("SendTextMessage", "Home")',
                 contentType: "application/json; charset=utf-8",
@@ -39,9 +44,9 @@
 
                     // Display output
                     if (data.Response == "error") {
-                        // Show Error
 
-                        $('#output').html("Error Occurred<br/><hr/>" + $('#output').html());
+                        // Show Error
+                        $('#output').html("Unable to process your query<br/><hr/>" + $('#output').html());
                     } else {
                         $('#output').html(data.Response + "<br/><hr/>" + $('#output').html());
                     }
@@ -51,9 +56,34 @@
                     console.log(data);
                 },
                 error: function () {
-                    alert("Error");
+                    $('#output').html("Unable to process your query<br/><hr/>" + $('#output').html());
                 }
             });
+        }
+
+        $('#input').keypress(function (e) {
+            var key = e.which;
+            if (key == 13)  // the enter key code
+            {
+                $('#btn-send').click();
+                return false;
+            }
+        });
+
+        if (!('webkitSpeechRecognition' in window)) {
+            // Show nothing or message
+        } else {
+            var recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+
+            recognition.onstart = function () {
+                recognition.lang = select_dialect.value;
+                recognition.start();
+            }
+            recognition.onresult = function(event) {  }
+            recognition.onerror = function(event) {  }
+            recognition.onend = function() {  }
         }
     </script>
 }

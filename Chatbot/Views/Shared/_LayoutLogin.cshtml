@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    @*<link rel="icon" type="image/png" sizes="16x16" href="~/images/favicon.png">*@
-    <title>Chatbot</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="~/images/favicon.png">
+    <title>Medical Chatbot</title>
     <!-- Bootstrap Core CSS -->
     <link href="~/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- animation CSS -->
@@ -48,5 +48,19 @@
     <script src="~/plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
     <!-- Validator JavaScript -->
     <script src="~/js/validator.js"></script>
+
+    @RenderSection("Scripts", false)
+
+    <script>
+        function keypressHandler(e) {
+            if (e.which == 13) {
+                e.preventDefault(); //stops default action: submitting form
+                $(this).blur();
+                $('#submit-btn').focus().click();//give your submit an ID
+            }
+        }
+
+        $('#my-form').keypress(keypressHandler);
+    </script>
 </body>
 </html>
