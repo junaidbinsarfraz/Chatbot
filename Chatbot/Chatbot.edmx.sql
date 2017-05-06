@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 04/20/2017 18:50:50
+-- Date Created: 05/05/2017 21:34:31
 -- Generated from EDMX file: E:\GithubNew\Chatbot\Chatbot\Chatbot.edmx
 -- --------------------------------------------------
 
@@ -42,6 +42,7 @@ CREATE TABLE [dbo].[Users] (
     [Name] nvarchar(max)  NULL,
     [Username] nvarchar(max)  NULL,
     [Password] nvarchar(max)  NULL,
+    [Email] nvarchar(max)  NULL,
     [Age] bigint  NULL
 );
 GO

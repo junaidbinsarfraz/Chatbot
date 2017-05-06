@@ -32,9 +32,16 @@
             </div>
             <div class="form-group">
                 <div class="col-xs-12">
-                    @Html.TextBoxFor(u => u.Age, new { @class = "form-control", @placeholder = "Age", @required = "required" })
+                    @Html.TextBoxFor(u => u.Email, new { @class = "form-control", @placeholder = "Email", @required = "required", @type = "email" })
                 </div>
             </div>
+            <div class="form-group form-check" style="cursor: pointer;">
+                <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input" required>
+                    I agree to the <a href="~/pdf/Terms_Of_Use.pdf" target="_blank">Physician Stat Terms and Conditions</a>
+                </label>
+            </div>
+
             <div style="color:red">
                 @Html.ValidationSummary()
             </div>

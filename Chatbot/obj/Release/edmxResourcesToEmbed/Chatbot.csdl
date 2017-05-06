@@ -16,6 +16,7 @@
     <Property Name="Name" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
     <Property Name="Username" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
     <Property Name="Password" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="Email" Nullable="true" MaxLength="Max" FixedLength="false" Unicode="true" Type="String" />
     <NavigationProperty Name="Chats" Relationship="Chatbot.UserChat" FromRole="User" ToRole="Chat" />
     <Property Name="Age" Type="Int64" Nullable="true" DefaultValue="0" />
   </EntityType>

@@ -208,6 +208,12 @@
     <Content Include="images\logo-mini.png" />
     <Content Include="images\logo-text.png" />
     <Content Include="images\logo.png" />
+    <Content Include="images\mic-animate.gif" />
+    <Content Include="images\mic-animate.png" />
+    <Content Include="images\mic-slash.gif" />
+    <Content Include="images\mic-slash.png" />
+    <Content Include="images\mic.gif" />
+    <Content Include="images\mic.png" />
     <Content Include="js\cbpFWTabs.js" />
     <Content Include="js\chat.js" />
     <Content Include="js\custom.js" />
@@ -3125,6 +3131,7 @@
     <Content Include="plugins\bower_components\typeahead.js-master\typeahead.js.jquery.json" />
     <Content Include="plugins\images\assets\photothumb.db" />
     <Content Include="plugins\images\large\.DS_Store" />
+    <Content Include="pdf\Terms_Of_Use.pdf" />
     <None Include="Properties\PublishProfiles\ChatBot.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

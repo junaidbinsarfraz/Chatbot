@@ -930,7 +930,8 @@ pre {
   /*background:@themecolor;*/
   height: 60px;
   display: inline-block;
-  width: 60px;
+  /*width: 60px;*/
+  width: 100%;
   line-height: 60px;
   text-align: center;
 }
@@ -3859,9 +3860,10 @@ table.focus-on tbody tr.focused td {
 }
 /* Login- register pages */
 .login-register {
-  background: url(../../plugins/images/login-register.jpg) no-repeat center center / cover !important;
+  background: url(../../plugins/images/login-register.jpg) no-repeat left center / cover !important;
   height: 100%;
   position: fixed;
+  background-size: 80% !important;
 }
 .login-box {
   background: #ffffff;
@@ -15790,4 +15792,8 @@ ul.pro-amenities li span i {
 
 input[type = "radio"] {
     margin-top: -90%;
+}
+
+.form-check.has-error label {
+    color: #a94442;
 }

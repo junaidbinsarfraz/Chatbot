@@ -1,17 +1,20 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Medical Chatbot | Home Page";
 }
 
 <div class="row">
     <div class="col-md-6 col-md-push-3">
         <div class="form-horizontal form-material">
 
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="Enter your query here" name="input" id="input" />
+            <div class="form-group" style="position: relative;width: 100%;">
+                <input type="text" class="form-control" placeholder="Hi, how can I help?" name="input" id="input" />
+                <img alt="speech" src="~/images/mic.png" style="position: absolute; right: 0; top: 23%; display: none; width: 5%; cursor: pointer;" title="Click to start voice recognition." id="mic"/>
+                <img alt="speech" src="~/images/mic-slash.png" style="position: absolute; right: 0; top: 23%; width: 5%; cursor: pointer;" title="Mic is supported on Chorme only." id="mic-slash"/>
+                <img alt="speech" src="~/images/mic-animate.png" style="position: absolute; right: 0; top: 23%;  display: none; width: 5%; cursor: pointer;" title="Click to stop voice recognition." id="mic-animate"/>
             </div>
 
             <div class="form-group">
-                <button type="button" class="btn btn-info btn-sm btn-block text-uppercase waves-effect waves-light" onclick="sendMessage();">Send</button>
+                <button type="button" id="btn-send" class="btn btn-info btn-sm btn-block text-uppercase waves-effect waves-light" onclick="sendMessage();">Send</button>
             </div>
 
         </div>
@@ -30,6 +33,11 @@
         // Send ajax call
         function sendMessage() {
             value = $('#input').val();
+
+            if (!value.trim()) {
+                return;
+            }
+
             $.ajax({
                 url: '@Url.Action("SendTextMessage", "Home")',
                 contentType: "application/json; charset=utf-8",
@@ -39,20 +47,92 @@
 
                     // Display output
                     if (data.Response == "error") {
-                        // Show Error
 
-                        $('#output').html("Error Occurred<br/><hr/>" + $('#output').html());
+                        // Show Error
+                        $('#output').html("Unable to process your query<br/><hr/>" + $('#output').html());
                     } else {
                         $('#output').html(data.Response + "<br/><hr/>" + $('#output').html());
                     }
 
                     $('#input').val('');
+                    $('#input').focus();
 
                     console.log(data);
                 },
                 error: function () {
-                    alert("Error");
+                    $('#output').html("Unable to process your query<br/><hr/>" + $('#output').html());
                 }
+            });
+        }
+
+        $('#input').keypress(function (e) {
+            var key = e.which;
+            if (key == 13)  // the enter key code
+            {
+                $('#btn-send').click();
+                return false;
+            }
+        });
+
+        if (!('webkitSpeechRecognition' in window)) {
+            // Show nothing or message
+        } else {
+            //var recognition = new webkitSpeechRecognition();
+            //recognition.continuous = true;
+            //recognition.interimResults = true;
+
+            //recognition.onstart = function () {
+            //    recognition.lang = select_dialect.value;
+            //    recognition.start();
+            //}
+            //recognition.onresult = function(event) {  }
+            //recognition.onerror = function(event) {  }
+            //recognition.onend = function() {  }
+
+            //var recognition = new SpeechRecognition();
+            // recognition.onresult = function(event) {
+            //   if (event.results.length > 0) {
+            //     q.value = event.results[0][0].transcript;
+            //     q.form.submit();
+            //   }
+            // }
+
+            $("#mic-slash").hide();
+            $("#mic").show();
+
+            //$("#mic").click(function () {
+            //    $("#mic").hide();
+            //    $("#mic-animate").show();
+            //});
+
+            $(function () {
+                try {
+                    var recognition = new webkitSpeechRecognition();
+                } catch (e) {
+                    // Not supported
+                    var recognition = Object;
+                }
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.onresult = function (event) {
+                    var txtRec = '';
+                    for (var i = event.resultIndex; i < event.results.length; ++i) {
+                        console.log(i + " - " + event.results[i][0].transcript);
+                        txtRec += event.results[i][0].transcript;
+                    }
+                    $('#input').val(txtRec);
+                };
+                $('#mic').click(function () {
+                    $("#mic").hide();
+                    $("#mic-animate").show();
+                    $('#input').focus();
+                    recognition.start();
+                });
+                $('#mic-animate').click(function () {
+                    $("#mic").show();
+                    $("#mic-animate").hide();
+                    recognition.stop();
+                });
             });
         }
     </script>

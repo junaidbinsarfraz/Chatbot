@@ -57,6 +57,5 @@ E:\GithubNew\Chatbot\Chatbot\bin\System.Web.WebPages.xml
 E:\GithubNew\Chatbot\Chatbot\bin\System.Web.WebPages.Deployment.xml
 E:\GithubNew\Chatbot\Chatbot\bin\System.Web.WebPages.Razor.xml
 E:\GithubNew\Chatbot\Chatbot\bin\Antlr3.Runtime.pdb
-E:\GithubNew\Chatbot\Chatbot\obj\Debug\Chatbot.csprojResolveAssemblyReference.cache
 E:\GithubNew\Chatbot\Chatbot\obj\Debug\Chatbot.dll
 E:\GithubNew\Chatbot\Chatbot\obj\Debug\Chatbot.pdb

@@ -6,8 +6,11 @@
     <div class="col-md-6 col-md-push-3">
         <div class="form-horizontal form-material">
 
-            <div class="form-group">
+            <div class="form-group" style="position: relative;width: 100%;">
                 <input type="text" class="form-control" placeholder="Hi, how can I help?" name="input" id="input" />
+                <img alt="speech" src="~/images/mic.png" style="position: absolute; right: 0; top: 23%; display: none; width: 5%; cursor: pointer;" title="Click to start voice recognition." id="mic"/>
+                <img alt="speech" src="~/images/mic-slash.png" style="position: absolute; right: 0; top: 23%; width: 5%; cursor: pointer;" title="Mic is supported on Chorme only." id="mic-slash"/>
+                <img alt="speech" src="~/images/mic-animate.png" style="position: absolute; right: 0; top: 23%;  display: none; width: 5%; cursor: pointer;" title="Click to stop voice recognition." id="mic-animate"/>
             </div>
 
             <div class="form-group">
@@ -52,6 +55,7 @@
                     }
 
                     $('#input').val('');
+                    $('#input').focus();
 
                     console.log(data);
                 },
@@ -73,17 +77,63 @@
         if (!('webkitSpeechRecognition' in window)) {
             // Show nothing or message
         } else {
-            var recognition = new webkitSpeechRecognition();
-            recognition.continuous = true;
-            recognition.interimResults = true;
+            //var recognition = new webkitSpeechRecognition();
+            //recognition.continuous = true;
+            //recognition.interimResults = true;
 
-            recognition.onstart = function () {
-                recognition.lang = select_dialect.value;
-                recognition.start();
-            }
-            recognition.onresult = function(event) {  }
-            recognition.onerror = function(event) {  }
-            recognition.onend = function() {  }
+            //recognition.onstart = function () {
+            //    recognition.lang = select_dialect.value;
+            //    recognition.start();
+            //}
+            //recognition.onresult = function(event) {  }
+            //recognition.onerror = function(event) {  }
+            //recognition.onend = function() {  }
+
+            //var recognition = new SpeechRecognition();
+            // recognition.onresult = function(event) {
+            //   if (event.results.length > 0) {
+            //     q.value = event.results[0][0].transcript;
+            //     q.form.submit();
+            //   }
+            // }
+
+            $("#mic-slash").hide();
+            $("#mic").show();
+
+            //$("#mic").click(function () {
+            //    $("#mic").hide();
+            //    $("#mic-animate").show();
+            //});
+
+            $(function () {
+                try {
+                    var recognition = new webkitSpeechRecognition();
+                } catch (e) {
+                    // Not supported
+                    var recognition = Object;
+                }
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.onresult = function (event) {
+                    var txtRec = '';
+                    for (var i = event.resultIndex; i < event.results.length; ++i) {
+                        console.log(i + " - " + event.results[i][0].transcript);
+                        txtRec += event.results[i][0].transcript;
+                    }
+                    $('#input').val(txtRec);
+                };
+                $('#mic').click(function () {
+                    $("#mic").hide();
+                    $("#mic-animate").show();
+                    $('#input').focus();
+                    recognition.start();
+                });
+                $('#mic-animate').click(function () {
+                    $("#mic").show();
+                    $("#mic-animate").hide();
+                    recognition.stop();
+                });
+            });
         }
     </script>
 }
