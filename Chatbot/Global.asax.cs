@@ -20,7 +20,7 @@ namespace Chatbot
 
         protected void Application_BeginRequest()
         {
-            if (!Context.Request.IsSecureConnection)
+            if (!Context.Request.IsSecureConnection && !Context.Request.Url.ToString().Contains("localhost"))
                 Response.Redirect(Context.Request.Url.ToString().Replace("http:", "https:"));
         }
     }
