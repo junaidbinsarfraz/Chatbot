@@ -3,85 +3,71 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Chatbot.Models;
 using ApiAiSDK;
 using ApiAiSDK.Model;
 
 namespace Chatbot.Controllers
 {
-    public class HomeController : Controller
+    public class WSController : Controller
     {
 
         ChatbotContainer db = new ChatbotContainer();
-        public static ApiAi apiAi;
-        private List<AIContext> contexts;
 
+        // GET: WS
         public ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
-
-        // Show login page if user is not loggedin
-        [HttpGet]
-        public ActionResult Login()
-        {
-            return View();
-        }
-
-        // Do login for a user and redirect to specific page w.r.t. user role
         [HttpPost]
-        public ActionResult Login(LoginModel loginModel)
+        public ActionResult Login(string username, string password)
         {
             if (ModelState.IsValid)
             {
                 // Check credentials
-                User user = db.Users.FirstOrDefault(u => u.Username == loginModel.Username && u.Password == loginModel.Password);
+                User user = db.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
 
                 if (user != null)
                 {
-                    HttpContext.Session["LoggedInUser"] = user;
-
-                    return RedirectToAction("Index", "Home");
+                    return Json(new
+                    {
+                        status = 200
+                    });
                 }
                 // Invalid credentials
                 else
                 {
-                    ModelState.AddModelError("", "Invalid username or password");
+                    return Json(new
+                    {
+                        status = 400,
+                        message = "Invalid username or password"
+                    });
                 }
 
-                return RedirectToAction("Login", "Home");
             }
 
-            return View();
+            return Json(new
+            {
+                status = 400,
+                message = "Invalid username or password"
+            });
         }
 
-        // Show signup page if user is not loggedin
-        [HttpGet]
-        public ActionResult Signup()
-        {
-            return View();
-        }
-
-        // Do signup for a user and redirect to specific page w.r.t. user role
         [HttpPost]
         public ActionResult Signup(User user)
         {
             if (ModelState.IsValid)
             {
+
+                if (user.Username == null || user.Password == null || user.Name == null || user.Email == null || user.Age == null)
+                {
+                    return Json(new
+                    {
+                        status = 400,
+                        message = "All fields are mandatory"
+                    });
+                }
+
                 // Check credentials
                 User existingUser = db.Users.FirstOrDefault(u => u.Username == user.Username);
 
@@ -91,36 +77,45 @@ namespace Chatbot.Controllers
 
                     db.SaveChanges();
 
-                    HttpContext.Session["LoggedInUser"] = db.Users.FirstOrDefault(u => u.Username == user.Username);
-
-                    return RedirectToAction("Index", "Home");
+                    return Json(new
+                    {
+                        status = 200
+                    });
                 }
                 // Invalid credentials
                 else
                 {
-                    ModelState.AddModelError("", "Username already exists");
+                    return Json(new
+                    {
+                        status = 400,
+                        message = "Username already exists"
+                    });
                 }
-
-                return RedirectToAction("Index", "Home");
             }
 
-            return View();
+            return Json(new
+            {
+                status = 400,
+                message = "Username already exists"
+            });
         }
 
-        [HttpGet]
-        public ActionResult SendTextMessage(String text)
+        [HttpPost]
+        public ActionResult SendTextMessage(String text, List<AIContext> contexts)
         {
-            if (apiAi == null)
+            if (HomeController.apiAi == null)
             {
                 var config = new AIConfiguration("2fe096a4e267427c9d3443810a7b82e2", SupportedLanguage.English);
-                apiAi = new ApiAi(config);
+                HomeController.apiAi = new ApiAi(config);
             }
 
             RequestExtras re = new RequestExtras();
 
-            re.Contexts = (List<AIContext>) HttpContext.Session["Contexts"];
-            
-            AIResponse response = apiAi.TextRequest(text, re);
+            // TODO: Get the context
+            //re.Contexts = (List<AIContext>)HttpContext.Session["Contexts"];
+            re.Contexts = contexts;
+
+            AIResponse response = HomeController.apiAi.TextRequest(text, re);
 
             if (response.IsError)
             {
@@ -157,15 +152,14 @@ namespace Chatbot.Controllers
                     contexts = null;
                 }
 
-                HttpContext.Session["Contexts"] = contexts;
-
                 return Json(new
                 {
-                    Response = response.Result.Fulfillment.Speech
-                }, JsonRequestBehavior.AllowGet);
+                    Response = response.Result.Fulfillment.Speech,
+                    contexts = contexts
+                });
             }
 
-            
+
         } 
     }
 }
