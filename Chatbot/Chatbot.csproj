@@ -157,8 +157,8 @@
       <DependentUpon>Chatbot.edmx</DependentUpon>
     </Compile>
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\WSController.cs" />
+    <Compile Include="Filters\AllowCrossSiteJsonAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

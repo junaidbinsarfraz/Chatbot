@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using ApiAiSDK;
 using ApiAiSDK.Model;
+using Chatbot.Filters;
+using System.Web.Helpers;
 
 namespace Chatbot.Controllers
 {
@@ -19,11 +21,14 @@ namespace Chatbot.Controllers
             return View();
         }
 
+        //[AllowCrossSiteJson]
         [HttpPost]
         public ActionResult Login(string username, string password)
         {
-            if (ModelState.IsValid)
+            if (!(username == null || username == "" || password == null || password == ""))
             {
+                password = Crypto.SHA256(password);
+
                 // Check credentials
                 User user = db.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
 
@@ -49,57 +54,51 @@ namespace Chatbot.Controllers
             return Json(new
             {
                 status = 400,
-                message = "Invalid username or password"
+                message = "All fields are mandatory"
             });
         }
 
+        //[AllowCrossSiteJson]
         [HttpPost]
         public ActionResult Signup(User user)
         {
-            if (ModelState.IsValid)
+            if (user.Username == null || user.Password == null || user.Name == null || user.Email == null || user.Age == null)
             {
-
-                if (user.Username == null || user.Password == null || user.Name == null || user.Email == null || user.Age == null)
+                return Json(new
                 {
-                    return Json(new
-                    {
-                        status = 400,
-                        message = "All fields are mandatory"
-                    });
-                }
-
-                // Check credentials
-                User existingUser = db.Users.FirstOrDefault(u => u.Username == user.Username);
-
-                if (existingUser == null)
-                {
-                    db.Users.Add(user);
-
-                    db.SaveChanges();
-
-                    return Json(new
-                    {
-                        status = 200
-                    });
-                }
-                // Invalid credentials
-                else
-                {
-                    return Json(new
-                    {
-                        status = 400,
-                        message = "Username already exists"
-                    });
-                }
+                    status = 400,
+                    message = "All fields are mandatory"
+                });
             }
 
-            return Json(new
+            // Check credentials
+            User existingUser = db.Users.FirstOrDefault(u => u.Username == user.Username);
+
+            if (existingUser == null)
             {
-                status = 400,
-                message = "Username already exists"
-            });
+                user.Password = Crypto.SHA256(user.Password);
+
+                db.Users.Add(user);
+
+                db.SaveChanges();
+
+                return Json(new
+                {
+                    status = 200
+                });
+            }
+            // Invalid credentials
+            else
+            {
+                return Json(new
+                {
+                    status = 400,
+                    message = "Username already exists"
+                });
+            }
         }
 
+        //[AllowCrossSiteJson]
         [HttpPost]
         public ActionResult SendTextMessage(String text, List<AIContext> contexts)
         {
@@ -158,8 +157,6 @@ namespace Chatbot.Controllers
                     contexts = contexts
                 });
             }
-
-
         } 
     }
 }

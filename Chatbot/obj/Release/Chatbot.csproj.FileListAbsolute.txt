@@ -29,3 +29,9 @@ E:\GithubNew\Chatbot\Chatbot\bin\Antlr3.Runtime.pdb
 E:\GithubNew\Chatbot\Chatbot\obj\Release\Chatbot.dll
 E:\GithubNew\Chatbot\Chatbot\obj\Release\Chatbot.pdb
 E:\GithubNew\Chatbot\Chatbot\obj\Release\Chatbot.csprojResolveAssemblyReference.cache
+E:\GithubNew\Chatbot\Chatbot\bin\System.Net.Http.Formatting.dll
+E:\GithubNew\Chatbot\Chatbot\bin\System.Web.Http.dll
+E:\GithubNew\Chatbot\Chatbot\bin\System.Web.Http.WebHost.dll
+E:\GithubNew\Chatbot\Chatbot\bin\System.Net.Http.Formatting.xml
+E:\GithubNew\Chatbot\Chatbot\bin\System.Web.Http.xml
+E:\GithubNew\Chatbot\Chatbot\bin\System.Web.Http.WebHost.xml

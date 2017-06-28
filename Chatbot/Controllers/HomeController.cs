@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Chatbot.Models;
 using ApiAiSDK;
 using ApiAiSDK.Model;
+using System.Web.Helpers;
 
 namespace Chatbot.Controllers
 {
@@ -48,8 +48,10 @@ namespace Chatbot.Controllers
         {
             if (ModelState.IsValid)
             {
+                string password = Crypto.SHA256(loginModel.Password);
+
                 // Check credentials
-                User user = db.Users.FirstOrDefault(u => u.Username == loginModel.Username && u.Password == loginModel.Password);
+                User user = db.Users.FirstOrDefault(u => u.Username == loginModel.Username && u.Password == password);
 
                 if (user != null)
                 {
@@ -62,8 +64,6 @@ namespace Chatbot.Controllers
                 {
                     ModelState.AddModelError("", "Invalid username or password");
                 }
-
-                return RedirectToAction("Login", "Home");
             }
 
             return View();
@@ -87,6 +87,8 @@ namespace Chatbot.Controllers
 
                 if (existingUser == null)
                 {
+                    user.Password = Crypto.SHA256(user.Password);
+
                     db.Users.Add(user);
 
                     db.SaveChanges();
