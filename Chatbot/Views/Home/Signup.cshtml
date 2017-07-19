@@ -1,4 +1,5 @@
-﻿@model Chatbot.Models.SignupModel
+﻿@using Chatbot.Models
+@model Chatbot.Models.SignupModel
 
 @{
     ViewBag.Title = "Medical Chatbot | Signup";
@@ -33,6 +34,13 @@
             <div class="form-group">
                 <div class="col-xs-12">
                     @Html.TextBoxFor(u => u.Email, new { @class = "form-control", @placeholder = "Email", @required = "required", @type = "email" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12">
+                    @Html.DropDownListFor(m => m.signupAs,
+                            new SelectList(Enum.GetValues(typeof(SignupAs))),
+                         "Select Signup As", new { @class = "form-control", @placeholder = "Signup As", @required = "required" })
                 </div>
             </div>
             <div class="form-group form-check" style="cursor: pointer;">

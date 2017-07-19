@@ -1,0 +1,17 @@
+﻿@model Chatbot.User
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="white-box">
+    <div class="row">
+        <div class="col-sm-12 col-xs-12">
+            @using (Html.BeginForm("Edit", "Patient", FormMethod.Post,
+                             new { enctype = "multipart/form-data", data_toggle = "validator" }))
+            {
+                
+            }
+        </div>
+    </div>
+</div>

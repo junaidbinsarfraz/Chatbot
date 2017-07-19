@@ -15797,3 +15797,12 @@ input[type = "radio"] {
 .form-check.has-error label {
     color: #a94442;
 }
+
+.blink-me {
+  animation: blinker 1s linear infinite;
+  background: #d0d0d0;
+}
+
+@keyframes blinker {  
+  50% { opacity: 0; }
+}

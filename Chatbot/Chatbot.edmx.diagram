@@ -5,9 +5,16 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="e1d0c3e6dfad4d08a8bdb921e3355682" Name="Diagram1" >
-        <EntityTypeShape EntityType="Chatbot.User" Width="1.5" PointX="4.375" PointY="3.25" />
-        <EntityTypeShape EntityType="Chatbot.Chat" Width="1.5" PointX="7.625" PointY="3.25" />
+        <EntityTypeShape EntityType="Chatbot.User" Width="1.5" PointX="7" PointY="1.875" />
+        <EntityTypeShape EntityType="Chatbot.Chat" Width="1.5" PointX="10.25" PointY="2.375" />
         <AssociationConnector Association="Chatbot.UserChat" />
+        <EntityTypeShape EntityType="Chatbot.Patient" Width="1.5" PointX="7" PointY="5.375" />
+        <EntityTypeShape EntityType="Chatbot.Doctor" Width="1.5" PointX="3.5" PointY="2.375" />
+        <EntityTypeShape EntityType="Chatbot.Message" Width="1.5" PointX="3.5" PointY="5.375" />
+        <AssociationConnector Association="Chatbot.UserPatient" />
+        <AssociationConnector Association="Chatbot.UserDoctor" />
+        <AssociationConnector Association="Chatbot.PatientMessage" />
+        <AssociationConnector Association="Chatbot.DoctorMessage" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -56,6 +56,7 @@ namespace Chatbot.Controllers
                 if (user != null)
                 {
                     HttpContext.Session["LoggedInUser"] = user;
+                    HttpContext.Session["Role"] = user.Role;
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -78,22 +79,38 @@ namespace Chatbot.Controllers
 
         // Do signup for a user and redirect to specific page w.r.t. user role
         [HttpPost]
-        public ActionResult Signup(User user)
+        public ActionResult Signup(SignupModel signupModel)
         {
             if (ModelState.IsValid)
             {
                 // Check credentials
-                User existingUser = db.Users.FirstOrDefault(u => u.Username == user.Username);
+                User existingUser = db.Users.FirstOrDefault(u => u.Username == signupModel.Username);
 
                 if (existingUser == null)
                 {
-                    user.Password = Crypto.SHA256(user.Password);
+                    User user = new User();
+
+                    user.Age = signupModel.Age;
+                    user.Email = signupModel.Email;
+                    user.Name = signupModel.Name;
+                    user.Username = signupModel.Username;
+                    user.Password = Crypto.SHA256(signupModel.Password);
+
+                    if (signupModel.signupAs == SignupAs.Patient)
+                    {
+                        user.Role = SignupAs.Patient.ToString();
+                    }
+                    else
+                    {
+                        user.Role = SignupAs.Doctor.ToString();
+                    }
 
                     db.Users.Add(user);
 
                     db.SaveChanges();
 
                     HttpContext.Session["LoggedInUser"] = db.Users.FirstOrDefault(u => u.Username == user.Username);
+                    HttpContext.Session["Role"] = user.Role;
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -166,8 +183,6 @@ namespace Chatbot.Controllers
                     Response = response.Result.Fulfillment.Speech
                 }, JsonRequestBehavior.AllowGet);
             }
-
-            
         } 
     }
 }
