@@ -216,9 +216,9 @@
                 var link = "../ManagePatients/Details/"+user.Id+"?param=detail";
 
                 if(user.Patient) {
-                    $('#chat').append("<li class=\"\"><div class=\"chat-body\"><div class=\"chat-text\"><h4><a href=\"../ManagePatients/Details/"+user.Id+"?param=details\" target=\"_blank\">"+user.Name+"</a></h4><p> "+text+"</p></div></div></li>");
+                    $('#chat').append("<li class=\"\"><div class=\"chat-body\"><div class=\"chat-text\"><h4><a href=\"../Patient/Details/"+user.Id+"?param=details\" target=\"_blank\">"+user.Name+"</a></h4><p> "+text+"</p></div></div></li>");
                 } else {
-                    $('#chat').append("<li class=\"\"><div class=\"chat-body\"><div class=\"chat-text\"><h4>"+user.Name+"</h4><p> "+text+"</p></div></div></li>");
+                    $('#chat').append("<li class=\"\"><div class=\"chat-body\"><div class=\"chat-text\"><h4><a href=\"../Doctor/Details/"+user.Id+"?param=details\" target=\"_blank\">"+user.Name+"</a></h4><p> "+text+"</p></div></div></li>");
                 }
 
             } else {
