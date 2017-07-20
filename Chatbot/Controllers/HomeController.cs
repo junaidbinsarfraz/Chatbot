@@ -56,9 +56,27 @@ namespace Chatbot.Controllers
                 if (user != null)
                 {
                     HttpContext.Session["LoggedInUser"] = user;
-                    HttpContext.Session["Role"] = user.Role;
 
-                    return RedirectToAction("Index", "Home");
+                    if (user.Role.ToString() == "Patient")
+                    {
+                        HttpContext.Session["Role"] = "Patient";
+                        HttpContext.Session["Patient"] = user.Patient;
+                        HttpContext.Session["PatientId"] = user.Patient.Id;
+                        HttpContext.Session["Doctor"] = null;
+                        HttpContext.Session["DoctorId"] = -1;
+
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else if (user.Role.ToString() == "Doctor")
+                    {
+                        HttpContext.Session["Role"] = "Doctor";
+                        HttpContext.Session["Patient"] = null;
+                        HttpContext.Session["PatientId"] = -1;
+                        HttpContext.Session["Doctor"] = user.Doctor;
+                        HttpContext.Session["DoctorId"] = user.Doctor.Id;
+
+                        return RedirectToAction("Index", "Message");
+                    }
                 }
                 // Invalid credentials
                 else
@@ -99,10 +117,12 @@ namespace Chatbot.Controllers
                     if (signupModel.signupAs == SignupAs.Patient)
                     {
                         user.Role = SignupAs.Patient.ToString();
+                        user.Patient = new Patient();
                     }
                     else
                     {
                         user.Role = SignupAs.Doctor.ToString();
+                        user.Doctor = new Doctor();
                     }
 
                     db.Users.Add(user);
@@ -110,9 +130,27 @@ namespace Chatbot.Controllers
                     db.SaveChanges();
 
                     HttpContext.Session["LoggedInUser"] = db.Users.FirstOrDefault(u => u.Username == user.Username);
-                    HttpContext.Session["Role"] = user.Role;
 
-                    return RedirectToAction("Index", "Home");
+                    if (user.Role.ToString() == "Patient")
+                    {
+                        HttpContext.Session["Role"] = "Patient";
+                        HttpContext.Session["Patient"] = user.Patient;
+                        HttpContext.Session["PatientId"] = user.Patient.Id;
+                        HttpContext.Session["Doctor"] = null;
+                        HttpContext.Session["DoctorId"] = -1;
+
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else if (user.Role.ToString() == "Doctor")
+                    {
+                        HttpContext.Session["Role"] = "Doctor";
+                        HttpContext.Session["Patient"] = null;
+                        HttpContext.Session["PatientId"] = -1;
+                        HttpContext.Session["Doctor"] = user.Doctor;
+                        HttpContext.Session["DoctorId"] = user.Doctor.Id;
+
+                        return RedirectToAction("Index", "Message");
+                    }
                 }
                 // Invalid credentials
                 else

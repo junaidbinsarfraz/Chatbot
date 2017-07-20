@@ -12,10 +12,10 @@ GO
 --Create a database
 IF EXISTS(SELECT name FROM sys.databases
     WHERE name = 'Chatbot')
-    DROP DATABASE HospitalManagement
+    DROP DATABASE Chatbot
 GO
 
-CREATE DATABASE HospitalManagement
+CREATE DATABASE Chatbot
 GO
 
 SET QUOTED_IDENTIFIER OFF;
