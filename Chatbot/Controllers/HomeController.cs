@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Chatbot.Models;
+using Chatbot.App_Start;
 using ApiAiSDK;
 using ApiAiSDK.Model;
 using System.Web.Helpers;
@@ -11,7 +12,7 @@ namespace Chatbot.Controllers
 {
     public class HomeController : Controller
     {
-
+        
         ChatbotContainer db = new ChatbotContainer();
         public static ApiAi apiAi;
         private List<AIContext> contexts;
@@ -39,6 +40,20 @@ namespace Chatbot.Controllers
         [HttpGet]
         public ActionResult Login()
         {
+            User loggedInUser = (User)HttpContext.Session["LoggedInUser"];
+            
+            if(RoleManager.isLoggedIn(loggedInUser))
+            {
+                if(RoleManager.isPatient(loggedInUser)) 
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else if (RoleManager.isDoctor(loggedInUser)) 
+                {
+                    return RedirectToAction("Index", "Message");
+                }
+            }
+
             return View();
         }
 
@@ -92,6 +107,20 @@ namespace Chatbot.Controllers
         [HttpGet]
         public ActionResult Signup()
         {
+            User loggedInUser = (User)HttpContext.Session["LoggedInUser"];
+
+            if (RoleManager.isLoggedIn(loggedInUser))
+            {
+                if (RoleManager.isPatient(loggedInUser))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else if (RoleManager.isDoctor(loggedInUser))
+                {
+                    return RedirectToAction("Index", "Message");
+                }
+            }
+
             return View();
         }
 
