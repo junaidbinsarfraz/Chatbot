@@ -6,6 +6,7 @@ using Chatbot.Models;
 using ApiAiSDK;
 using ApiAiSDK.Model;
 using System.Web.Helpers;
+using Chatbot.Utils;
 
 namespace Chatbot.Controllers
 {
@@ -168,6 +169,46 @@ namespace Chatbot.Controllers
             }
 
             
-        } 
+        }
+
+        // Do logout
+        [HttpGet]
+        public ActionResult LogOut()
+        {
+            HttpContext.Session["LoggedInUser"] = null;
+            HttpContext.Session["Contexts"] = null;
+
+            return RedirectToAction("Login", "Home");
+        }
+
+        [HttpGet]
+        public ActionResult Contactus()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Contactus(string name, string email, string message)
+        {
+            if (ModelState.IsValid)
+            {
+                string toEmail = System.Configuration.ConfigurationManager.AppSettings["ToMailAccount"];
+                string subject = "Physician Stat Feedback";
+                string body = "Name : " + name + "<br/>Email : " + email + "<br/>Message : " + message;
+
+                bool emailSent = EmailUtil.SendEMail(toEmail, subject, body);
+
+                if (emailSent)
+                {
+                    ModelState.AddModelError("Success", "Email Sent");
+                }
+                else
+                {
+                    ModelState.AddModelError("Fail", "Unable to send email");
+                }
+            }
+
+            return View();
+        }
     }
 }
