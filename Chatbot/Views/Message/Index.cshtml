@@ -186,6 +186,14 @@
     <!-- /.right-sidebar -->
 </div>
 
+<div id="connectionSlowAlert" class="myadmin-alert myadmin-alert-icon myadmin-alert-click alert-warning myadmin-alert-top alerttop" style="display: none;"> <i class="ti-user"></i> There is a connection problem. <a href="#" class="closed">×</a> </div>
+<div id="reconnectingAlert" class="myadmin-alert myadmin-alert-icon myadmin-alert-click alert-info myadmin-alert-top alerttop" style="display: none;"> <i class="ti-user"></i> Trying to reconnect ... <a href="#" class="closed">×</a> </div>
+<div class="myadmin-alert myadmin-alert-icon myadmin-alert-click alert-success myadmin-alert-top alerttop" style="display: none;"> <i class="ti-user"></i> There is a connection problem. <a href="#" class="closed">×</a> </div>
+
+<div id="reconnectedAlert" class="jq-toast-single jq-has-icon jq-icon-success" style="text-align: left;display: none;"><span class="jq-toast-loader jq-toast-loaded" style="-webkit-transition: width 3.1s ease-in; -o-transition: width 3.1s ease-in; transition: width 3.1s ease-in; background-color: #ff6849;"></span><span class="close-jq-toast-single">×</span><h2 class="jq-toast-heading">Reconnected</h2>Connection is reset.</div>
+
+
+
 <input id="chat-user-id" type="hidden" />
 <input id="chat-connection-id" type="hidden" />
 
@@ -204,7 +212,7 @@
         // Create a function that the hub can call back to display messages.
         chat.client.newMessageRecieved = function (connectionId, text, user) {
             // Add the message to the page.
-            
+
             // Check if userId is selected
             var isSlected = $("#contacts li#" + connectionId +" a.active");
 
@@ -258,6 +266,24 @@
                 $('#send-message').attr('disabled', 'disabled');
             }
         };
+
+        chat.connectionSlow(function () {
+            $('#reconnectedAlert').hide();
+            $('#reconnectingAlert').hide();
+            $('#connectionSlowAlert').show();
+        });
+
+        chat.reconnecting(function () {
+            $('#connectionSlowAlert').hide();
+            $('#reconnectedAlert').hide();
+            $('#reconnectingAlert').show();
+        });
+
+        chat.onReconnected(function () {
+            $('#connectionSlowAlert').hide();
+            $('#reconnectingAlert').hide();
+            $('#reconnectedAlert').show();
+        });
 
         // Called when new user is connected
         chat.client.newClientRegistered = function (userConnection) {
