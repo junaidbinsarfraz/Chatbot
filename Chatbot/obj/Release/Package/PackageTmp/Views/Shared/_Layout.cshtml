@@ -62,10 +62,13 @@
                 <ul class="nav navbar-top-links navbar-right pull-right">
                     <!-- .Megamenu -->
                     <li class="mega-dropdown">
+                    @if ((Chatbot.User)HttpContext.Current.Session["LoggedInUser"] != null)
+                    {
                         <a href="#" class="dropdown-toggle u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Html.Raw(((Chatbot.User)HttpContext.Current.Session["LoggedInUser"]).Name) <span class="caret"></span></a>
                         <ul class="dropdown-menu animated flipInY">
-                            <li><a href="../Home/Login"><i class="fa fa-power-off"></i>  Logout</a></li>
+                            <li><a href="/Home/LogOut"><i class="fa fa-power-off"></i>  Logout</a></li>
                         </ul>
+                    }
                     </li>
                     <!-- /.Megamenu -->
 
@@ -83,12 +86,15 @@
 
             <div class="sidebar-nav navbar-collapse slimscrollsidebar">
                 <div class="user-profile">
-                    <div class="dropdown user-pro-body">
-                        <a href="#" class="dropdown-toggle u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Html.Raw(((Chatbot.User)HttpContext.Current.Session["LoggedInUser"]).Name) <span class="caret"></span></a>
-                        <ul class="dropdown-menu animated flipInY">
-                            <li><a href="../Home/Login"><i class="fa fa-power-off"></i>  Logout</a></li>
-                        </ul>
-                    </div>
+                    @if ((Chatbot.User)HttpContext.Current.Session["LoggedInUser"] != null)
+                    {
+                        <div class="dropdown user-pro-body">
+                            <a href="#" class="dropdown-toggle u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Html.Raw(((Chatbot.User)HttpContext.Current.Session["LoggedInUser"]).Name) <span class="caret"></span></a>
+                            <ul class="dropdown-menu animated flipInY">
+                                <li><a href="/Home/LogOut"><i class="fa fa-power-off"></i>  Logout</a></li>
+                            </ul>
+                        </div>    
+                    }
                 </div>
             </div>
         </div>
@@ -107,7 +113,7 @@
                 <!--/row -->
             </div>
             <!-- /.container-fluid -->
-            <footer class="footer text-center"> &copy; 2017 Medical Chatbot </footer>
+            <footer class="footer text-center"> &copy; 2017 Medical Chatbot <a href="/Home/Contactus"><u>Contact us</u></a> </footer>
         </div>
         <!-- /#page-wrapper -->
     </div>
