@@ -21,6 +21,9 @@ namespace Chatbot.Hubs
 
         // Hold all the connections of each user
         public static ConcurrentDictionary<string, UserConnection> UserConnections = new ConcurrentDictionary<string, UserConnection>();
+        // Hold all the removed/finished/garbage connections
+        public static ConcurrentDictionary<string, UserConnection> GarbageConnections = new ConcurrentDictionary<string, UserConnection>();
+
         public void Hello()
         {
             Clients.All.hello();
@@ -44,6 +47,11 @@ namespace Chatbot.Hubs
             lock (UserConnections)
             {
                 UserConnections.TryRemove(Context.ConnectionId, out garbage);
+
+                lock (GarbageConnections)
+                {
+                    GarbageConnections.TryAdd(Context.ConnectionId, garbage);
+                }
 
                 Clients.Clients(UserConnections.Keys.ToList()).UserDisconnected(
                     JsonConvert.SerializeObject(garbage, Formatting.None,
@@ -102,10 +110,18 @@ namespace Chatbot.Hubs
 
                     db.SaveChanges();
 
+                    UserConnection garbageConnection;
+
                     // Send Message to user
-                    if (FromUserId != -1)
+                    if (FromUserId != -1 && !GarbageConnections.TryGetValue(ToConnectionId, out garbageConnection))
                     {
                         Clients.Client(ToConnectionId).AppendNewMessage(FromUserId, Text);
+                    }
+                    else
+                    {
+                        // TODO: Check if that user is already online with other connection or not
+
+                        // TODO: If not then send email to offline user/connection
                     }
                 }
 
@@ -196,6 +212,10 @@ namespace Chatbot.Hubs
             {
                 user = db.Users.Include(u => u.Doctor).Where(u => u.Doctor.Id == DoctorId).FirstOrDefault();
             }
+
+            // TODO: Check if that user is already online with other connection or not
+
+            // TODO: If not then send email to offline user/connection
 
             Clients.Client(ConnectionId).NewMessageRecieved(Context.ConnectionId, Text, JsonConvert.SerializeObject(user, Formatting.None,
                                 new JsonSerializerSettings()

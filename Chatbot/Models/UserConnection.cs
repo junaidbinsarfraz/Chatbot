@@ -10,5 +10,6 @@ namespace Chatbot.Models
         public User User { get; set; }
         public bool IsPatient { get; set; }
         public string ConnectionId { get; set; }
+        public DateTime RemovedDateTime { get; set; }
     }
 }

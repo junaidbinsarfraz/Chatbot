@@ -253,6 +253,9 @@
         // Called when user is dosconnected
         chat.client.userDisconnected = function (userConnection) {
             userConnection = JSON.parse(userConnection);
+
+            // TODO: Remove offline/this-connection (if same) user connection exists else just change the status to offline
+
             $("#" + userConnection.ConnectionId + "").remove();
 
             var isSlected = $("#contacts li a.active");
@@ -308,6 +311,8 @@
                     // Check if any user is selected or not, if not then select this user
 
                 }
+
+                // TODO: Remove offline (if same) user connected
             }
 
             console.log(userConnection);
