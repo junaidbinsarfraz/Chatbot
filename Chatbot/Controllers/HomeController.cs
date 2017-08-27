@@ -19,6 +19,11 @@ namespace Chatbot.Controllers
 
         public ActionResult Index()
         {
+            if(HttpContext.Session["LoggedInUser"] == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+
             return View();
         }
 
