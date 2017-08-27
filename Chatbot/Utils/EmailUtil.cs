@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
+using System.Net.NetworkInformation;
 using System.Web;
 
 namespace Chatbot.Utils
@@ -13,20 +15,20 @@ namespace Chatbot.Utils
             try
             {
                 SmtpClient client = new SmtpClient();
-                client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                client.EnableSsl = true;
-                client.Host = "smtp.gmail.com";
-                client.Port = 587;
+                client.Host = "relay-hosting.secureserver.net";
+                //client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                //client.EnableSsl = true;
+                //client.Port = 588;
 
-                string MailAccount = System.Configuration.ConfigurationManager.AppSettings["MailAccount"];
-                string MailPassword = System.Configuration.ConfigurationManager.AppSettings["MailPassword"];
+                //string MailAccount = System.Configuration.ConfigurationManager.AppSettings["MailAccount"];
+                //string MailPassword = System.Configuration.ConfigurationManager.AppSettings["MailPassword"];
 
-                System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(MailAccount, MailPassword);
-                client.UseDefaultCredentials = false;
-                client.Credentials = credentials;
+                //System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(MailAccount, MailPassword);
+                //client.UseDefaultCredentials = false;
+                //client.Credentials = credentials;
 
                 MailMessage msg = new MailMessage();
-                msg.From = new MailAddress(MailAccount);
+                msg.From = new MailAddress("cesar@physicianstat.com");
                 msg.To.Add(new MailAddress(emailid));
 
                 msg.Subject = subject;
