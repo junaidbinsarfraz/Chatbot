@@ -270,23 +270,24 @@
             }
         };
 
-        chat.connectionSlow(function () {
-            $('#reconnectedAlert').hide();
-            $('#reconnectingAlert').hide();
-            $('#connectionSlowAlert').show();
-        });
+        // TODO: Check how this will work
+        //chat.connectionSlow(function () {
+        //    $('#reconnectedAlert').hide();
+        //    $('#reconnectingAlert').hide();
+        //    $('#connectionSlowAlert').show();
+        //});
 
-        chat.reconnecting(function () {
-            $('#connectionSlowAlert').hide();
-            $('#reconnectedAlert').hide();
-            $('#reconnectingAlert').show();
-        });
+        //chat.reconnecting(function () {
+        //    $('#connectionSlowAlert').hide();
+        //    $('#reconnectedAlert').hide();
+        //    $('#reconnectingAlert').show();
+        //});
 
-        chat.onReconnected(function () {
-            $('#connectionSlowAlert').hide();
-            $('#reconnectingAlert').hide();
-            $('#reconnectedAlert').show();
-        });
+        //chat.onReconnected(function () {
+        //    $('#connectionSlowAlert').hide();
+        //    $('#reconnectingAlert').hide();
+        //    $('#reconnectedAlert').show();
+        //});
 
         // Called when new user is connected
         chat.client.newClientRegistered = function (userConnection) {

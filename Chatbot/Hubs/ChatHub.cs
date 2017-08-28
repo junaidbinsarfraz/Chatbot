@@ -53,12 +53,12 @@ namespace Chatbot.Hubs
                     GarbageConnections.TryAdd(Context.ConnectionId, garbage);
                 }
 
-                Clients.Clients(UserConnections.Keys.ToList()).UserDisconnected(
-                    JsonConvert.SerializeObject(garbage, Formatting.None,
-                            new JsonSerializerSettings()
-                            {
-                                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                            }));
+                //Clients.Clients(UserConnections.Keys.ToList()).UserDisconnected(
+                //    JsonConvert.SerializeObject(garbage, Formatting.None,
+                //            new JsonSerializerSettings()
+                //            {
+                //                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                //            }));
             }
             return base.OnDisconnected(StopCalled);
         }
@@ -110,7 +110,7 @@ namespace Chatbot.Hubs
 
                     db.SaveChanges();
 
-                    UserConnection garbageConnection;
+                    UserConnection garbageConnection = null;
 
                     // Send Message to user
                     if (FromUserId != -1 && !GarbageConnections.TryGetValue(ToConnectionId, out garbageConnection))
@@ -120,11 +120,19 @@ namespace Chatbot.Hubs
                     else
                     {
                         // TODO: Check if that user is already online with other connection or not
+                        foreach (var item in GarbageConnections)
+                        {
+                            if (item.Value.ConnectionId != ToConnectionId && item.Value.User.Id == garbageConnection.User.Id)
+                            {
+                                return;
+                            }
+                        }
 
                         // TODO: If not then send email to offline user/connection
+
+                        Console.WriteLine("Email sent");
                     }
                 }
-
             }
             else
             {
@@ -182,6 +190,14 @@ namespace Chatbot.Hubs
                 UserConnections.TryGetValue(ConnectionId, out userConnection);
             }
 
+            if (userConnection == null)
+            {
+                lock (GarbageConnections)
+                {
+                    GarbageConnections.TryGetValue(ConnectionId, out userConnection);
+                }
+            }
+
             if (userConnection != null)
             {
 
@@ -214,14 +230,32 @@ namespace Chatbot.Hubs
             }
 
             // TODO: Check if that user is already online with other connection or not
+            UserConnection garbageConnection = null;
 
-            // TODO: If not then send email to offline user/connection
+            GarbageConnections.TryGetValue(ConnectionId, out garbageConnection);
 
-            Clients.Client(ConnectionId).NewMessageRecieved(Context.ConnectionId, Text, JsonConvert.SerializeObject(user, Formatting.None,
+            if (garbageConnection != null)
+            {
+                foreach (var item in UserConnections)
+                {
+                    if (item.Value.ConnectionId != ConnectionId && item.Value.User.Id == garbageConnection.User.Id)
+                    {
+                        return;
+                    }
+                }
+
+                // TODO: If not then send email to offline user/connection
+
+                Console.WriteLine("Email sent");
+            }
+            else
+            {
+                Clients.Client(ConnectionId).NewMessageRecieved(Context.ConnectionId, Text, JsonConvert.SerializeObject(user, Formatting.None,
                                 new JsonSerializerSettings()
                                 {
                                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                                 }));
+            }
         }
     }
 }
