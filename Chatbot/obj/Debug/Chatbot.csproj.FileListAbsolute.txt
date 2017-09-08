@@ -79,6 +79,5 @@ D:\Junaid\Github\Chatbot\Chatbot\bin\System.Web.WebPages.xml
 D:\Junaid\Github\Chatbot\Chatbot\bin\System.Web.WebPages.Deployment.xml
 D:\Junaid\Github\Chatbot\Chatbot\bin\System.Web.WebPages.Razor.xml
 D:\Junaid\Github\Chatbot\Chatbot\bin\Antlr3.Runtime.pdb
-D:\Junaid\Github\Chatbot\Chatbot\obj\Debug\Chatbot.csprojResolveAssemblyReference.cache
 D:\Junaid\Github\Chatbot\Chatbot\obj\Debug\Chatbot.dll
 D:\Junaid\Github\Chatbot\Chatbot\obj\Debug\Chatbot.pdb

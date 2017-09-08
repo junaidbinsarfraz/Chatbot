@@ -11,6 +11,7 @@ using System.Web.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Web.Mvc;
+using Chatbot.Utils;
 
 namespace Chatbot.Hubs
 {
@@ -143,6 +144,36 @@ namespace Chatbot.Hubs
         // Register new user connection
         public void RegisterUser(int UserId, bool IsPatient)
         {
+
+            ConcurrentDictionary<string, UserConnection> onlineUsers = ChatUtil.getUserConnectionByUserId(UserConnections, UserId);
+            ConcurrentDictionary<string, UserConnection> offlineUsers = ChatUtil.getUserConnectionByUserId(GarbageConnections, UserId);
+
+            // TODO: if offline users then remove them and add this user instead
+            if (!offlineUsers.IsEmpty)
+            {
+                foreach (var item in offlineUsers)
+                {
+                    lock (GarbageConnections)
+                    {
+                        UserConnection garbage;
+
+                        GarbageConnections.TryRemove(item.Key, out garbage);
+
+                        Clients.Clients(UserConnections.Keys.ToList()).UserDisconnected(
+                            JsonConvert.SerializeObject(garbage, Formatting.None,
+                                    new JsonSerializerSettings()
+                                    {
+                                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                                    }));
+                    }
+                }
+            }
+            else if (!onlineUsers.IsEmpty)
+            {
+                // TODO: else if onlineUsers then donot add this user
+                return;
+            }
+
             // Get User from database
             User User;
 

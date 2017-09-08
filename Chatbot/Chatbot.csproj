@@ -208,6 +208,7 @@
     <Compile Include="User.cs">
       <DependentUpon>Chatbot.tt</DependentUpon>
     </Compile>
+    <Compile Include="Utils\ChatUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootstrap\dist\css\bootstrap-theme.css" />

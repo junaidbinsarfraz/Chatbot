@@ -12,9 +12,9 @@
         <div class="chat-left-aside">
             <div class="open-panel"><i class="ti-angle-right"></i></div>
             <div class="chat-left-inner">
-                <div class="form-material">
+                @*<div class="form-material">
                     <input class="form-control p-20" type="text" placeholder="Search Contact">
-                </div>
+                </div>*@
                 <div class="slimScrollDiv" style="position: relative;/* overflow: hidden; */overflow-y: auto;width: auto;height: 400px;/* overflow-y: auto; */">
                     <ul id="contacts" class="chatonline style-none slimScrollDiv" style="width: auto;height: 100%; padding: 5px; margin: 0px;/* overflow-y: auto; */">
                         @*<li>
@@ -206,6 +206,7 @@
     <script>
         var chat = $.connection.chatHub;
         var isPatient = ('@Session["Role"]' == "Patient");
+        var userId = @Model.Id;    
 
         debugger;
 
@@ -295,7 +296,7 @@
             userConnection = JSON.parse(userConnection);
 
             // Make sure that user is not added himself into the connection list
-            if ($.connection.hub.id && $.connection.hub.id != userConnection.ConnectionId) {
+            if ($.connection.hub.id && $.connection.hub.id != userConnection.ConnectionId && userConnection.User.Id != userId) {
                 var name = userConnection.User.Name;
                 var id = userConnection.ConnectionId;
 
@@ -331,19 +332,22 @@
                     var name = userConnection.User.Name;
                     var id = userConnection.ConnectionId;
 
-                    if (isPatient && userConnection.User.Doctor) {
-                        // LoggedIn User is patient
-                        // Append in the list of doctors
+                    if(userConnection.User.Id != userId) {
 
-                        var smallLabel = userConnection.User.Doctor.Specialization;
-                        $('#contacts').append("<li id=\"" + id + "\" onclick=\"selectUser(this)\"><a href=\"javascript:void(0)\"><span>" + name + "<small class=\"text-label\">" + smallLabel + "</small></span></a></li>");
+                        if (isPatient && userConnection.User.Doctor) {
+                            // LoggedIn User is patient
+                            // Append in the list of doctors
 
-                    } else if (!isPatient && userConnection.User.Patient) {
-                        // LoggedIn user is doctor
-                        // Append in the list of patients
+                            var smallLabel = userConnection.User.Doctor.Specialization;
+                            $('#contacts').append("<li id=\"" + id + "\" onclick=\"selectUser(this)\"><a href=\"javascript:void(0)\"><span>" + name + "<small class=\"text-label\">" + smallLabel + "</small></span></a></li>");
 
-                        var smallLabel = userConnection.User.Patient.Disease;
-                        $('#contacts').append("<li id=\"" + id + "\" onclick=\"selectUser(this)\"><a href=\"javascript:void(0)\"><span>" + name + "<small class=\"text-label\">" + smallLabel + "</small></span></a></li>");
+                        } else if (!isPatient && userConnection.User.Patient) {
+                            // LoggedIn user is doctor
+                            // Append in the list of patients
+
+                            var smallLabel = userConnection.User.Patient.Disease;
+                            $('#contacts').append("<li id=\"" + id + "\" onclick=\"selectUser(this)\"><a href=\"javascript:void(0)\"><span>" + name + "<small class=\"text-label\">" + smallLabel + "</small></span></a></li>");
+                        }
                     }
                 }
                 else {
@@ -385,98 +389,98 @@
 
                     // Do stream line scrolling effect
                     $(".chat-box .slimScrollDiv").animate({ scrollTop: $("#chat")[0].scrollHeight}, 1000);
-                }
-            });
-
-            // Register User
-            chat.server.registerUser(@Model.Id, isPatient);
-
+            }
         });
 
-        // Called when current user select other user to start chat
-        function selectUser(_this) {
+        // Register User
+        chat.server.registerUser(@Model.Id, isPatient);
 
-            var connectionId = $(_this).attr('id');
+    });
 
-            chat.server.getConnection(connectionId);
+    // Called when current user select other user to start chat
+    function selectUser(_this) {
 
-            $(_this).removeClass('blink-me');
+        var connectionId = $(_this).attr('id');
 
-            if($($(_this).children('a')[0]).find('div.notify')) {
-                $($(_this).children('a')[0]).find('div.notify').remove();
-            }
+        chat.server.getConnection(connectionId);
 
-            $('#contacts li a.active').removeClass('active');
+        $(_this).removeClass('blink-me');
 
-            $('#message-box').removeAttr('disabled');
-
-            $('#send-message').removeAttr('disabled');
-
-            clearChat();
-
+        if($($(_this).children('a')[0]).find('div.notify')) {
+            $($(_this).children('a')[0]).find('div.notify').remove();
         }
 
-        // Called when get selected user's chat history
-        chat.client.GetConnectionResult = function(userConnection){
-            userConnection = JSON.parse(userConnection);
+        $('#contacts li a.active').removeClass('active');
 
-            $('#chat-connection-id').val(userConnection.ConnectionId);
+        $('#message-box').removeAttr('disabled');
 
-            var PatientId;
-            var DoctorId;
+        $('#send-message').removeAttr('disabled');
 
-            if(isPatient) {
-                PatientId = @Session["PatientId"];
-                DoctorId = userConnection.User.Doctor.Id;
-                $('#chat-user-id').val(DoctorId);
-            } else {
-                DoctorId = @Session["DoctorId"];
-                PatientId = userConnection.User.Patient.Id;
-                $('#chat-user-id').val(PatientId);
-            }
+        clearChat();
 
-            // Send ajax call
-            $.ajax({
-                url: '@Url.Action("ChatHistory", "Message")',
-                data : { PatientId : PatientId, DoctorId : DoctorId },
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (data) {
+    }
 
-                    // Check if user is selected
-                    var selectedConnectionId = $('#chat-connection-id');
+    // Called when get selected user's chat history
+    chat.client.GetConnectionResult = function(userConnection){
+        userConnection = JSON.parse(userConnection);
 
-                    for(i = 0; i < data.length; i++) {
+        $('#chat-connection-id').val(userConnection.ConnectionId);
 
-                        var message = data[i];
+        var PatientId;
+        var DoctorId;
 
-                        var oddClass = ((isPatient && message.FromPatient) || (!isPatient && !message.FromPatient)) ? "odd" : "";
+        if(isPatient) {
+            PatientId = @Session["PatientId"];
+            DoctorId = userConnection.User.Doctor.Id;
+            $('#chat-user-id').val(DoctorId);
+        } else {
+            DoctorId = @Session["DoctorId"];
+            PatientId = userConnection.User.Patient.Id;
+            $('#chat-user-id').val(PatientId);
+        }
 
-                        // Doctor can view patient's profile
-                        if(!isPatient && message.FromPatient) {
-                            $('#chat').append("<li class=\""+oddClass+"\"><div class=\"chat-body\"><div class=\"chat-text\"><h4><a href=\"../Patient/Details/"+message.Patient.User.Id+"?param=details\" target=\"_blank\">"+((message.FromPatient) ? message.Patient.User.Name : message.Doctor.User.Name)+"</a></h4><p> "+message.Text+"</p></div></div></li>");
-                        } else {
-                            $('#chat').append("<li class=\""+oddClass+"\"><div class=\"chat-body\"><div class=\"chat-text\"><h4><a href=\"../Doctor/Details/"+message.Doctor.User.Id+"?param=details\" target=\"_blank\">"+((message.FromPatient) ? message.Patient.User.Name : message.Doctor.User.Name)+"</h4><p> "+message.Text+"</p></div></div></li>");
-                        }
+        // Send ajax call
+        $.ajax({
+            url: '@Url.Action("ChatHistory", "Message")',
+            data : { PatientId : PatientId, DoctorId : DoctorId },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+
+                // Check if user is selected
+                var selectedConnectionId = $('#chat-connection-id');
+
+                for(i = 0; i < data.length; i++) {
+
+                    var message = data[i];
+
+                    var oddClass = ((isPatient && message.FromPatient) || (!isPatient && !message.FromPatient)) ? "odd" : "";
+
+                    // Doctor can view patient's profile
+                    if(!isPatient && message.FromPatient) {
+                        $('#chat').append("<li class=\""+oddClass+"\"><div class=\"chat-body\"><div class=\"chat-text\"><h4><a href=\"../Patient/Details/"+message.Patient.User.Id+"?param=details\" target=\"_blank\">"+((message.FromPatient) ? message.Patient.User.Name : message.Doctor.User.Name)+"</a></h4><p> "+message.Text+"</p></div></div></li>");
+                    } else {
+                        $('#chat').append("<li class=\""+oddClass+"\"><div class=\"chat-body\"><div class=\"chat-text\"><h4><a href=\"../Doctor/Details/"+message.Doctor.User.Id+"?param=details\" target=\"_blank\">"+((message.FromPatient) ? message.Patient.User.Name : message.Doctor.User.Name)+"</h4><p> "+message.Text+"</p></div></div></li>");
                     }
-
-                    $(".chat-box .slimScrollDiv").animate({ scrollTop: $("#chat")[0].scrollHeight}, 1000);
-                },
-                error: function () {
                 }
-            });
 
-            $("#"+userConnection.ConnectionId+"").children().addClass('active');
+                $(".chat-box .slimScrollDiv").animate({ scrollTop: $("#chat")[0].scrollHeight}, 1000);
+            },
+            error: function () {
+            }
+        });
 
-        };
+        $("#"+userConnection.ConnectionId+"").children().addClass('active');
 
-        clearChat = function() {
-            $('#chat li').remove();
-        }
+    };
 
-        //$('#contacts li').click(function (event) {
-        //    $("a:first", this).addClass('active');
-        //});
+    clearChat = function() {
+        $('#chat li').remove();
+    }
+
+    //$('#contacts li').click(function (event) {
+    //    $("a:first", this).addClass('active');
+    //});
 
     </script>
 }
