@@ -209,6 +209,7 @@
       <DependentUpon>Chatbot.tt</DependentUpon>
     </Compile>
     <Compile Include="Utils\ChatUtil.cs" />
+    <Compile Include="Utils\EmailUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootstrap\dist\css\bootstrap-theme.css" />
@@ -3226,6 +3227,7 @@
     <Content Include="Views\Patient\Edit.cshtml" />
     <Content Include="Views\Patient\Index.cshtml" />
     <Content Include="Views\Message\Index.cshtml" />
+    <Content Include="Views\Home\Contactus.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3277,4 +3279,9 @@
   </Target>
   <Target Name="AfterBuild">
   </Target> -->
+  <Target Name="SpicNSpan" AfterTargets="Clean"> <!-- common vars https://msdn.microsoft.com/en-us/library/c02as0cs.aspx?f=255&MSPPError=-2147217396 -->
+         <RemoveDir Directories="$(TargetDir)" /> <!-- bin -->
+         <RemoveDir Directories="$(SolutionDir).vs" /> <!-- .vs -->
+         <RemoveDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)" /> <!-- obj -->
+  </Target>
 </Project>
